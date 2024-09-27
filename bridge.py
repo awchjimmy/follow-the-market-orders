@@ -1,6 +1,7 @@
 from helium import *
 import time
 import json
+from selenium.webdriver import ChromeOptions
 
 env_content = ''
 
@@ -58,7 +59,10 @@ def close_position():
 
 def start_browser():
     global env_content
-    start_chrome(env_content['server'], headless=False)
+    options = ChromeOptions()
+    options.add_argument("--headless")
+    options.add_argument("--window-size=1280,800")
+    start_chrome(env_content['server'], options=options)
 
 def open_long():
     load_env()
