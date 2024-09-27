@@ -2,25 +2,19 @@ from helium import *
 import time
 import json
 
-server = 'https://mt5demo2.ftmo.com/'
-login = ''
-password = ''
+env_content = ''
 
-def load_credentials():
+def load_env():
     with open('.env', 'r') as fin:
-        content = fin.read()
-        content = json.loads(content)
-
-        global login
-        global password
-        login = content['login']
-        password = content['password']
+        global env_content
+        env_content = fin.read()
+        env_content = json.loads(env_content)
 
 def enter_credentials():
-    load_credentials()
+    global env_content
     wait_until(Button('Connect to account').exists)
-    write(login, into='Enter Login')
-    write(password, into='Enter Password')
+    write(env_content['login'], into='Enter Login')
+    write(env_content['password'], into='Enter Password')
     click('Connect to account')
     time.sleep(3)
 
@@ -62,8 +56,13 @@ def close_position():
     click('Modify Position')
     click(S('button.orange')) # Close position
 
+def start_browser():
+    global env_content
+    start_chrome(env_content['server'], headless=False)
+
 def open_long():
-    start_chrome(server, headless=False)
+    load_env()
+    start_browser()
     click_accept()
     enter_credentials()
     change_layout()
@@ -72,7 +71,8 @@ def open_long():
     kill_browser()
 
 def close_long():
-    start_chrome(server, headless=False)
+    load_env()
+    start_browser()
     click_accept()
     enter_credentials()
     change_layout()
