@@ -57,6 +57,11 @@ def change_symbol():
     click(Button(to_right_of=search)) # Close Search Symbol
     write(LEFT_CONTROL + 'm') # Close Watch
 
+def close_position():
+    rightclick(S('div[title="BTCUSD"]'))
+    click('Modify Position')
+    click(S('button.orange')) # Close position
+
 def open_long():
     start_chrome(server, headless=False)
     click_accept()
@@ -67,4 +72,11 @@ def open_long():
     kill_browser()
 
 def close_long():
-    pass
+    start_chrome(server, headless=False)
+    click_accept()
+    enter_credentials()
+    change_layout()
+    change_symbol()
+    close_position()
+    kill_browser()
+
