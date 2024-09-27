@@ -35,41 +35,35 @@ def change_layout():
 
 def enter_volume():
     wait_until(Text('Symbol').exists)
-    press(F9) # Press F9 to Show Trade Form 
+    click(S('div[title="Show Trade Form (F9)"]')) # Show Trade Form
+    
     tfs = find_all(TextField())
-
-    if len(tfs) == 5:
-        input_comment = tfs[0]
-        input_stoploss = tfs[1]
-        input_takeprofit = tfs[2]
-        input_volume = tfs[3]
-        input_searchsymbol = tfs[4]
-
+    if len(tfs) == 4:
+        (input_volume, input_takeprofit, input_comment, input_stoploss) = tfs
         doubleclick(input_volume)
-        write('1', into=input_volume) # Volume: 1.00
+        write('0.01', into=input_volume)
 
         click(Button('Buy by Market')) # Click 'Buy by Market'
         wait_until(Button('OK').exists)
     else:
-        print('Error: The layout has been changed.')
+        print('Error: The layout has been changed. There are {0} TextField(s).'.format(len(tfs)))
 
+def change_symbol():
+    wait_until(Text('Symbol').exists)
+    write('BTCUSD', into="Search symbol")
+    click(Button('BTCUSD'))
+
+    search = find_all(TextField())[0]
+    click(Button(to_right_of=search)) # Close Search Symbol
+    write(LEFT_CONTROL + 'm') # Close Watch
 
 def open_long():
     start_chrome(server, headless=False)
-
-    # Click 'Accept'
     click_accept()
-
-    # Enter credentials
     enter_credentials()
-
-    # Change layout
     change_layout()
-
-    # Enter volume
+    change_symbol()
     enter_volume()
-
-    # Kill browser
     kill_browser()
 
 def close_long():
